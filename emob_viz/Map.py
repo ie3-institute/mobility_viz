@@ -2,6 +2,8 @@ import os
 
 import folium
 
+from emob_viz.model.Poi import Poi
+
 
 class Map:
     def __init__(self, center_lon: float, center_lat: float, zoom_start: float, target: str, file_name: str):
@@ -17,6 +19,25 @@ class Map:
                               zoom_start=zoom_start)
         self.target = target
         self.file_name = file_name
+
+    def add_pois(self, pois: list[Poi], color: str):
+        for poi in pois:
+            self.__add_poi(poi, color)
+
+    def __add_poi(self, poi: Poi, color: str):
+        self.__add_dot(poi.lon, poi.lat, poi.type, 20, color)
+
+    def __add_dot(self, lon: float, lat: float, tooltip: str = None, radius: float = 20, color: str = "lightblue"):
+        """
+        Add a dot marker at the given location
+        :param lon: Longitude
+        :param lat: Latitude
+        :param tooltip: Tool tip to be shown
+        :param radius: Radius of the marker
+        :param color: The color of the marker
+        :return: nothing
+        """
+        folium.Circle((lat, lon), radius=radius, tooltip=tooltip, color = color).add_to(self.map)
 
     def save(self):
         target_file_path = os.path.join(self.target, self.file_name)
