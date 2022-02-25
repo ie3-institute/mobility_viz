@@ -9,6 +9,7 @@ license = "BSD3"
 python = "^3.10"
 psycopg2-binary = "^2.9.3"
 psycopg2 = "^2.9.3"
+folium = "^0.12.1"
 
 [tool.poetry.dev-dependencies]
 
