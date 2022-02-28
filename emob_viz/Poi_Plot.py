@@ -11,8 +11,8 @@ try:
 
     # Query poi from database
     cursor = connection.cursor()
-    # cursor.execute("SELECT * FROM novagent.poi LIMIT 5;")
-    cursor.execute("SELECT * FROM novagent.poi;")
+    cursor.execute("SELECT * FROM novagent.poi LIMIT 5;")
+    # cursor.execute("SELECT * FROM novagent.poi;")
     data = cursor.fetchall()
 
     # Don't forget to close the connection!
