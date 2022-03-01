@@ -1,5 +1,5 @@
 [tool.poetry]
-name = "emob_viz"
+name = "mobility_viz"
 version = "0.1.0"
 description = ""
 authors = ["ie3 institute - SIMONA team"]
