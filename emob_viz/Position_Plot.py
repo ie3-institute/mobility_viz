@@ -53,37 +53,37 @@ try:
 
     # Preparations to create a map
     output_dir = os.path.join("..", "output", "positions")
-    converter = Html2Png(output_dir)
     simulation_start = datetime.datetime(2016, 1, 4, 0, 0, 0, 0)
     start_datetime = simulation_start
-    simulation_end = datetime.datetime(2016, 1, 4, 2, 0, 0)
+    simulation_end = datetime.datetime(2016, 1, 5, 0, 0, 0)
     dt = datetime.timedelta(0, 0, 0, 0, 15, 0, 0)
+
+    # Collect results for later visualization
+    time_steps = []
+    time_coordinates = []
+
     while start_datetime < simulation_end:
+        time_steps.append(start_datetime.strftime("%Y-%m-%d %H:%M"))
         window_end = start_datetime + dt
 
         data = _get_data(connection, start_datetime, window_end, simulation_start)
 
         # Convert models
         positions = [Position.from_tuple(row) for row in data]
-
-        # Create a map
-        suffix = re.sub(":", "-", re.sub(" ", "_", str(start_datetime)))
-        mp = Map(51.5127813, 7.4648609, 12, output_dir, f'position_map_{suffix}.html')
-        mp.add_geojson(os.path.join("..", "input", "dortmund.geojson"))
         coordinates = list(map(lambda x: [x.lat, x.lon], positions))
-        mp.add_positions(coordinates)
-        mp.add_text(start_datetime.strftime("%A, %d.%m.%Y - %H:%M"))
-        mp.save()
-        converter.convert(f'position_map_{suffix}.html', delay=1, remove=True)
+        time_coordinates.append(coordinates)
 
         # Go on to the next window
         start_datetime = window_end
 
-    # Convert png's to gif
-    Png2Gif(output_dir, output_dir).build_gif("positions")
+    # Create a map
+    suffix = re.sub(":", "-", re.sub(" ", "_", str(start_datetime)))
+    mp = Map(51.5127813, 7.4648609, 12, output_dir, f'position_map_with_time.html')
+    mp.add_geojson(os.path.join("..", "input", "dortmund.geojson"))
+    mp.add_positions_with_time(time_coordinates, time_steps)
+    mp.save()
 
     # Don't forget to close the connection!
-    converter.close()
     connection.close()
 except Exception as e:
     logging.error("Unable to connect to database.", e)

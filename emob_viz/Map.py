@@ -1,7 +1,8 @@
 import os
+from datetime import datetime
 
 import folium
-from folium.plugins import HeatMap
+from folium.plugins import HeatMap, HeatMapWithTime
 
 from emob_viz.model.Movement import Movement
 from emob_viz.model.Poi import Poi
@@ -10,7 +11,7 @@ from emob_viz.model.Poi import Poi
 class Map:
     def __init__(self, center_lon: float, center_lat: float, zoom_start: float, target: str, file_name: str):
         """
-        Create a mpa instance
+        Create a map instance
         :param center_lon: Latitude of the map center
         :param center_lat: Longitude of the map center
         :param zoom_start: Zoom stage at the beginning
@@ -67,6 +68,9 @@ class Map:
         :return: None
         """
         HeatMap(coordinates).add_to(self.map)
+
+    def add_positions_with_time(self, coordinates, index_list: list[datetime]) -> None:
+        HeatMapWithTime(coordinates, index=index_list).add_to(self.map)
 
     def save(self):
         target_file_path = os.path.join(self.target, self.file_name)
