@@ -1,3 +1,4 @@
+import json
 import os
 
 import folium
@@ -20,6 +21,15 @@ class Map:
                               zoom_start=zoom_start)
         self.target = target
         self.file_name = file_name
+
+    def add_geojson(self, file: str) -> None:
+        """
+        Add the contents of a geo json file to the map
+        :param file: The file path
+        :return: Nothing
+        """
+        folium.GeoJson(file, overlay=False, style_function=lambda x: {"fillOpacity": 0.0, "color": "black"}).add_to(
+            self.map)
 
     def add_pois(self, pois: list[Poi], color: str):
         for poi in pois:

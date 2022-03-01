@@ -49,7 +49,7 @@ try:
     output_dir = os.path.join("..", "output")
     converter = Html2Png(output_dir)
     start_datetime = datetime.datetime(2016, 1, 4, 0, 0, 0, 0)
-    simulation_end = datetime.datetime(2016, 1, 4, 2, 50, 0)
+    simulation_end = datetime.datetime(2016, 1, 11, 0, 0, 0)
     dt = datetime.timedelta(0, 0, 0, 0, 15, 0, 0)
     while start_datetime < simulation_end:
         window_end = start_datetime + dt
@@ -63,13 +63,14 @@ try:
         # Create a map
         suffix = re.sub(":", "-", re.sub(" ", "_", str(start_datetime)))
         mp = Map(51.5127813, 7.4648609, 12, output_dir, f'movement_map_{suffix}.html')
+        mp.add_geojson(os.path.join("..", "input", "dortmund.geojson"))
         for mvmt_type, type_mvmts in movement_by_type:
             mvmts = list(type_mvmts)
             color = color_map[mvmt_type]
             mp.add_movements(mvmts, color)
-        mp.add_text(str(start_datetime))
+        mp.add_text(start_datetime.strftime("%A, %d.%m.%Y - %H:%M"))
         mp.save()
-        converter.convert(f'movement_map_{suffix}.html')
+        converter.convert(f'movement_map_{suffix}.html', delay=1, remove=True)
 
         # Go on to the next window
         start_datetime = window_end
