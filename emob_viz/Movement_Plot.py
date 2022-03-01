@@ -1,11 +1,13 @@
 import datetime
 import itertools
 import logging
+import os.path
 import re
 
 from emob_viz.Map import Map
 from emob_viz.Source import Source
 from emob_viz.conversion.Html2Png import Html2Png
+from emob_viz.conversion.Png2Gif import Png2Gif
 from emob_viz.model.Movement import Movement
 
 
@@ -44,7 +46,8 @@ try:
         "arrival": 'blue',
         "departure": 'darkred'
     }
-    converter = Html2Png("output")
+    output_dir = os.path.join("..", "output")
+    converter = Html2Png(output_dir)
     start_datetime = datetime.datetime(2016, 1, 4, 0, 0, 0, 0)
     simulation_end = datetime.datetime(2016, 1, 4, 2, 50, 0)
     dt = datetime.timedelta(0, 0, 0, 0, 15, 0, 0)
@@ -59,7 +62,7 @@ try:
 
         # Create a map
         suffix = re.sub(":", "-", re.sub(" ", "_", str(start_datetime)))
-        mp = Map(51.5127813, 7.4648609, 12, 'output', f'movement_map_{suffix}.html')
+        mp = Map(51.5127813, 7.4648609, 12, output_dir, f'movement_map_{suffix}.html')
         for mvmt_type, type_mvmts in movement_by_type:
             mvmts = list(type_mvmts)
             color = color_map[mvmt_type]
@@ -70,6 +73,9 @@ try:
 
         # Go on to the next window
         start_datetime = window_end
+
+    # Convert png's to gif
+    Png2Gif(output_dir, output_dir).build_gif("movements")
 
     # Don't forget to close the connection!
     converter.close()
