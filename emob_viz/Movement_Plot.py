@@ -46,7 +46,7 @@ try:
         "arrival": 'blue',
         "departure": 'darkred'
     }
-    output_dir = os.path.join("..", "output")
+    output_dir = os.path.join("..", "output", "movements")
     converter = Html2Png(output_dir)
     start_datetime = datetime.datetime(2016, 1, 4, 0, 0, 0, 0)
     simulation_end = datetime.datetime(2016, 1, 11, 0, 0, 0)
