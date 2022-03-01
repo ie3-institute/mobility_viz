@@ -1,5 +1,3 @@
-import logging
-
 import psycopg2
 
 from emob_viz.exception.SourceException import SourceException

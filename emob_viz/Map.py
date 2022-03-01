@@ -2,6 +2,7 @@ import os
 
 import folium
 
+from emob_viz.model.Movement import Movement
 from emob_viz.model.Poi import Poi
 
 
@@ -37,7 +38,17 @@ class Map:
         :param color: The color of the marker
         :return: nothing
         """
-        folium.Circle((lat, lon), radius=radius, tooltip=tooltip, color = color).add_to(self.map)
+        folium.Circle((lat, lon), radius=radius, tooltip=tooltip, color=color).add_to(self.map)
+
+    def add_movements(self, movements: list[Movement], color: str):
+        for mvmt in movements:
+            self.__add_movement(mvmt, color)
+
+    def __add_movement(self, movement: Movement, color: str):
+        self.__add_dot(movement.lon, movement.lat, movement.type, 20, color)
+
+    def add_text(self, text: str):
+        self.map.get_root().html.add_child(folium.Element("<p><b>{}</b></p>".format(text)))
 
     def save(self):
         target_file_path = os.path.join(self.target, self.file_name)

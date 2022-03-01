@@ -6,4 +6,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+- Plotting of POIs on map
+- Plotting of EV Movements (Arrival and Departure) on a map
+- Saving maps as interactive HTML pages as well as png files
+
 [Unreleased]: https://github.com/ie3-institute/
