@@ -1,7 +1,7 @@
-import json
 import os
 
 import folium
+from folium.plugins import HeatMap
 
 from emob_viz.model.Movement import Movement
 from emob_viz.model.Poi import Poi
@@ -59,6 +59,14 @@ class Map:
 
     def add_text(self, text: str):
         self.map.get_root().html.add_child(folium.Element("<p><b>{}</b></p>".format(text)))
+
+    def add_positions(self, coordinates) -> None:
+        """
+        Add positions of ev's to the map as a heat map
+        :param coordinates:
+        :return: None
+        """
+        HeatMap(coordinates).add_to(self.map)
 
     def save(self):
         target_file_path = os.path.join(self.target, self.file_name)
