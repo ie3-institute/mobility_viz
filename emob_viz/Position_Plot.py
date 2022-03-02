@@ -6,6 +6,8 @@ from emob_viz.Map import Map
 from emob_viz.Source import Source
 from emob_viz.model.Position import Position
 
+import plotly.graph_objects as go
+
 
 def _get_parked_evs(con: object, instant: datetime):
     """
@@ -71,6 +73,9 @@ try:
         # Go on to the next window
         start_datetime = window_end
 
+    # Don't forget to close the connection!
+    connection.close()
+
     # Get the maximum amount of parked evs within one instant and weigh the single instant accordingly
     min_parked_evs = float(min(map(lambda coords: len(coords), time_coordinates_parking)))
     max_parked_evs = float(max(map(lambda coords: len(coords), time_coordinates_parking)))
@@ -88,7 +93,24 @@ try:
     # mp.add_positions_with_time(time_coordinates_charging, time_steps, 0.0, 300.0 / 10000.0)
     # mp.save()
 
-    # Don't forget to close the connection!
-    connection.close()
+    # Plot the portions of driving and parking evs
+    amount_of_parking_evs = list(map(lambda x: len(x) / 10000.0 * 100.0, time_coordinates_parking))
+    amount_of_driving_evs = [100.0 - x for x in amount_of_parking_evs]
+    layout = go.Layout(xaxis=dict(title='Time'), yaxis=dict(title='Portion of EVs'))
+    plot = go.Figure(data=[
+        go.Bar(
+            name='Parking EVs',
+            x=time_steps,
+            y=amount_of_parking_evs
+        ),
+        go.Bar(
+            name='Driving EVs',
+            x=time_steps,
+            y=amount_of_driving_evs
+        )
+    ], layout=layout
+    )
+    plot.update_layout(barmode='stack')
+    plot.show()
 except Exception as e:
     logging.error("Unable to connect to database.", e)
