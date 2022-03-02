@@ -69,8 +69,10 @@ class Map:
         """
         HeatMap(coordinates).add_to(self.map)
 
-    def add_positions_with_time(self, coordinates, index_list: list[datetime]) -> None:
-        HeatMapWithTime(coordinates, index=index_list).add_to(self.map)
+    def add_positions_with_time(self, coordinates, index_list: list[str], min_value: float, max_value: float) -> None:
+        intermediate_value = (min_value + max_value) / 2
+        HeatMapWithTime(coordinates, index=index_list, min_opacity=0.4, max_opacity=0.9,
+                        gradient={min_value: 'blue', intermediate_value: 'lime', max_value: 'red'}).add_to(self.map)
 
     def save(self):
         target_file_path = os.path.join(self.target, self.file_name)
