@@ -23,10 +23,10 @@ def _get_data(con: object, start: datetime, end: datetime):
     cursor = con.cursor()
     dtf = "%Y-%m-%dT%H:%M:%S"
     query = f"""
-    SELECT "Time", "ArrivalOrDeparture", lat, lon
+    SELECT time, "EV_Movements".type, lat, lon
     FROM novagent."EV_Movements"
-             JOIN novagent.poi on LOWER("DestinationPoi") = LOWER(poi.id)
-    WHERE "Time" BETWEEN '{start.strftime(dtf)}' AND '{end.strftime(dtf)}' ORDER BY "Time";
+             JOIN novagent.poi on LOWER(destination_poi) = LOWER(poi.id)
+    WHERE time BETWEEN '{start.strftime(dtf)}' AND '{end.strftime(dtf)}' ORDER BY time, "EV_Movements".type;
     """
     cursor.execute(
         query
@@ -48,8 +48,8 @@ try:
     }
     output_dir = os.path.join("..", "output", "movements")
     converter = Html2Png(output_dir)
-    start_datetime = datetime.datetime(2016, 1, 4, 0, 0, 0, 0)
-    simulation_end = datetime.datetime(2016, 1, 11, 0, 0, 0)
+    start_datetime = datetime.datetime(2016, 1, 18, 0, 0, 0, 0)
+    simulation_end = datetime.datetime(2016, 1, 19, 0, 0, 0)
     dt = datetime.timedelta(0, 0, 0, 0, 15, 0, 0)
     while start_datetime < simulation_end:
         window_end = start_datetime + dt
